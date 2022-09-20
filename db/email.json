@@ -1,0 +1,20 @@
+[
+    {
+        "id":1,
+        "photo":"avater.jpg",
+        "email":"ashrafulalam10000@gmail.com",
+        "cell":"01933333333",
+        "token":132333,
+        "verified":false
+
+    },
+    {
+        "id":2,
+        "photo":"avater.jpg",
+        "email":"ashrafulalam10000@gmail.com",
+        "cell":"01933333333",
+        "token":132333,
+        "verified":false
+
+    }
+]
