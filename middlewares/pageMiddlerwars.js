@@ -1,4 +1,6 @@
 import multer from 'multer';
+import dotenv from 'dotenv';
+
 import path, { dirname } from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -9,10 +11,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (
-      req.mimetype == 'image/jpg' ||
-      req.mimetype == 'image/jpeg' ||
-      req.mimetype == 'image/png' ||
-      req.mimetype == 'image/gif'
+      file.mimetype == 'image/jpg' ||
+      file.mimetype == 'image/jpeg' ||
+      file.mimetype == 'image/png' ||
+      file.mimetype == 'image/gif'
     ) {
       cb(null, path.join(__dirname, '../public/userphoto'));
     }
@@ -25,3 +27,5 @@ const storage = multer.diskStorage({
 export const userMulter = multer({
   storage: storage,
 }).single('photo');
+
+// send email

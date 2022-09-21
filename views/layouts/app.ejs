@@ -11,6 +11,7 @@
 	<title>zItalyFood | Free Restaurant Html5 Templates</title>
 	<meta name="description" content="Free Responsive Html5 Css3 Templates | zerotheme.com">
 	<meta name="author" content="www.zerotheme.com">
+
 	
     <!-- Mobile Specific Metas
   ================================================== -->
@@ -18,12 +19,15 @@
     
     <!-- CSS
   ================================================== -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs5/dt-1.12.1/datatables.min.css"/>
+ 
+
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"  />
-  <link href="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"> 	
   <link rel="stylesheet" href="/css/zerogrid.css">
-	<link rel="stylesheet" href="/css/style.css">
-	<link rel="stylesheet" href="/css/slide.css">
-	<link rel="stylesheet" href="/css/menu.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/slide.css">
+  <link rel="stylesheet" href="/css/menu.css">
+  <link href="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"> 	
 	<!-- Custom Fonts -->
     <!-- <link href="/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
 	<!--[if lt IE 8]>
@@ -139,12 +143,32 @@
 
 	<!-- js -->
 	<script src="/js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.12.1/datatables.min.js"></script>
 	<script src="/js/classie.js"></script>
 	<script src="/js/demo.js"></script>
 	<script src="/js/responsiveslides.min.js"></script>
 	<script src="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" ></script>
 
 	<script>
+
+$('.data-table').DataTable()
+
+
+// delete btn 
+const delBtn = document.querySelectorAll('.delete-btn');
+
+delBtn.forEach((item)=>{
+	item.onclick= ()=>{
+		const conf = confirm('are you sure ?');
+
+		if(conf == true){
+			return true;
+		}else{
+			return false;
+		}
+	}
+})
+
 	$(function () {
 	  // Slideshow 4
 	  $("#slider4").responsiveSlides({

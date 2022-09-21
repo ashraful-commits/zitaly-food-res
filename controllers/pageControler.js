@@ -1,6 +1,9 @@
 import path, { dirname } from 'path';
 import fs, { readFileSync, writeFileSync } from 'fs';
 import { fileURLToPath } from 'url';
+import { sendEMail } from '../utility/sendEmail.js';
+import { sendSMSfuction } from '../utility/sendSms.js';
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // home page show
@@ -48,23 +51,33 @@ export const addnewdata = (req, res) => {
 };
 
 // post
-export const postdata = (req, res) => {
+export const postdata = async (req, res) => {
   const user = JSON.parse(
     readFileSync(path.join(__dirname, '../db/email.json'))
   );
-  const { photo, email, cell } = req.body;
+  const token = Date.now() + Math.floor(Math.random() * 1000);
+  const otp = Math.floor(Math.random() * 1000);
+  const { name, photo, email, cell } = req.body;
+  await sendSMSfuction(
+    cell,
+    `Hi ${name}, How are you? Your OTP is ${otp}`
+  );
+  await sendEMail(email, 'Hi', { name, email, cell, token });
   user.push({
     id: user.length - 1 + 2,
+    name: name,
     photo: req.file.filename,
     email: email,
     cell: cell,
-    token: Math.floor(Math.random() * 1000),
+    token: token,
     verified: false,
+    otp: otp,
   });
   writeFileSync(
     path.join(__dirname, '../db/email.json'),
     JSON.stringify(user)
   );
+
   res.redirect('/admin');
 };
 
@@ -88,7 +101,6 @@ export const unverifieddata = (req, res) => {
   const unverifiedData = user.filter(
     (data) => data.verified == false
   );
-  console.log('hello');
 
   res.render('database/unverified', {
     user: unverifiedData,
@@ -101,4 +113,77 @@ export const viewdata = (req, res) => {
 };
 export const editdata = (req, res) => {
   res.render('database/edit');
+};
+
+export const verifiydata = (req, res) => {
+  const user = JSON.parse(
+    readFileSync(path.join(__dirname, '../db/email.json'))
+  );
+  const token = req.params.token;
+
+  user[user.findIndex((data) => data.token == token)] = {
+    ...user[user.findIndex((data) => data.token == token)],
+    verified: true,
+  };
+
+  writeFileSync(
+    path.join(__dirname, '../db/email.json'),
+    JSON.stringify(user)
+  );
+
+  res.redirect('/admin');
+};
+
+// DELETE DATA
+
+export const afterverifiedDeldata = (req, res) => {
+  const user = JSON.parse(
+    readFileSync(path.join(__dirname, '../db/email.json'))
+  );
+  const verId = req.params.id;
+  const afterverdelete = user.filter((data) => data.id != verId);
+  writeFileSync(
+    path.join(__dirname, '../db/email.json'),
+    JSON.stringify(afterverdelete)
+  );
+  res.redirect('/admin');
+};
+
+export const afterdeleteData = (req, res) => {
+  const user = JSON.parse(
+    readFileSync(path.join(__dirname, '../db/email.json'))
+  );
+  const id = req.params.id;
+  const afterdelete = user.filter((data) => data.id != id);
+  writeFileSync(
+    path.join(__dirname, '../db/email.json'),
+    JSON.stringify(afterdelete)
+  );
+  res.redirect('/unverified');
+};
+
+// verify with cell
+
+export const cellVerifiy = (req, res) => {
+  res.render('database/cell');
+};
+
+export const cellVerifiynow = (req, res) => {
+  const user = JSON.parse(
+    readFileSync(path.join(__dirname, '../db/email.json'))
+  );
+  const { otp } = req.body;
+
+  user[user.findIndex((data) => data.otp == otp)] = {
+    ...user[user.findIndex((data) => data.otp == otp)],
+    verified: true,
+    token: '',
+  };
+
+  writeFileSync(
+    path.join(__dirname, '../db/email.json'),
+    JSON.stringify(user)
+  );
+
+  res.redirect('/admin');
 };
